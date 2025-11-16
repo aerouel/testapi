@@ -1,36 +1,24 @@
-# 1️⃣ Install dependencies & build the Next.js app
+# Stage 1: Build
 FROM node:20-alpine AS builder
-
 WORKDIR /app
 
-# Copy package.json and lock file
 COPY package*.json ./
+RUN npm install --frozen-lockfile
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
-
-# Copy all project files
 COPY . .
-
-# Build Next.js app
 RUN npm run build
 
-
-# 2️⃣ Production image
-FROM node:20-alpine AS runner
-
+# Stage 2: Production
+FROM node:20-alpine
 WORKDIR /app
 
-# Set to production
-ENV NODE_ENV=production
-
-# Enable Next.js standalone mode
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+# Copy entire build instead of standalone
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/package*.json ./
 
-# App will run on port 3000 by default
+# Install production dependencies
+RUN npm install --production --frozen-lockfile
+
 EXPOSE 3000
-
-# Start Next.js server
-CMD ["node", "server.js"]
+CMD ["npx", "next", "start"]

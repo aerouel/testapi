@@ -1,8 +1,9 @@
 // products.ts
 // Services for Viator Partner API v2 - Products endpoints
 
-const BASE_URL = process.env.BASE_URL_VIATOR;
-const API_KEY = process.env.API_KEY_VIATOR;
+const BASE_URL = "https://api.viator.com/partner";
+//const API_KEY = "ef944b91-1a6c-449c-8f9b-e5b773e9b4cc";
+const API_KEY = "10b85f9e-46eb-4d35-973c-79e4864babeb";
 
 type FetchOptions = {
   method: string;
@@ -98,15 +99,18 @@ export interface ProductsBookingQuestionsResponse {
 export async function searchProducts(
   body: ProductsSearchRequest
 ): Promise<ProductsSearchResponse> {
+
   console.log(JSON.stringify(body));
-  /*return  viatorFetch<ProductsSearchResponse>(
+
+  return viatorFetch<ProductsSearchResponse>(
     `/products/search`,
     {
       method: 'POST',
       body: JSON.stringify(body),
     }
-  );*/
+  );
 }
+
 
 // GET /products/{product-code}
 export async function getProductDetail(
